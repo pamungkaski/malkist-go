@@ -8,7 +8,7 @@ Simple Google Maps Web Service API Wrapper on Go [Google Maps Web Service API](h
 
 ## Functionality
 
-* [ ] Distance Matrix API [link](https://developers.google.com/maps/documentation/distance-matrix/intro)
+* [x] Distance Matrix API [link](https://developers.google.com/maps/documentation/distance-matrix/intro)
 
 ## Usage
 
