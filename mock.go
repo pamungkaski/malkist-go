@@ -1,12 +1,13 @@
-package malkist_go
+package malkist
 
-type DistanceMatrixMock struct {
-	Origins []string
+type distanceMatrixMock struct {
+	Origins      []string
 	Destinations []string
-	Expected []DistanceMatrix
+	Expected     []DistanceMatrix
 }
 
-var DistanceMatrixMocks = []DistanceMatrixMock{
+// DistanceMatrixMocks contain the scenario for testing CalculateDistance function.
+var DistanceMatrixMocks = []distanceMatrixMock{
 	{
 		Expected: []DistanceMatrix{
 			{
@@ -17,10 +18,10 @@ var DistanceMatrixMocks = []DistanceMatrixMock{
 			},
 		},
 		Origins: []string{
-			"40.6655101,-73.89188969999998",
+			"40.6655101, -73.89188969999998",
 		},
 		Destinations: []string{
-			"40.6905615,-73.9976592",
+			"40.6905615, -73.9976592",
 		},
 	},
 }
