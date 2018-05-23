@@ -50,9 +50,9 @@ type distanceMatrixAPIDuration struct {
 
 // createDistanceMatrixURL to construct the API endpoint with its params.
 func createDistanceMatrixURL(origins, destinations []string, key string) (*url.URL, error) {
-	endpoint, err := url.Parse(fmt.Sprint("https://maps.googleapis.com/maps/api/distancematrix/json"))
+	endpoint, err := url.Parse("https://maps.googleapis.com/maps/api/distancematrix/json")
 	if err != nil {
-		return &url.URL{}, err
+		return nil, err
 	}
 	endpoint.Scheme = "https"
 	endpoint.Host = "google.com"

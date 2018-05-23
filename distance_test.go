@@ -13,7 +13,6 @@ func TestCalculateDistance(t *testing.T) {
 		result, err := m.CalculateDistance(malmock.Origins, malmock.Destinations)
 		if err != nil {
 			t.Fatal(err)
-			return
 		}
 
 		expected := malmock.Expected

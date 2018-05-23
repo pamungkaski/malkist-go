@@ -9,4 +9,3 @@ go:
 
 script:
  - go test -v
- - go lint
