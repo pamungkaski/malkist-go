@@ -3,21 +3,22 @@ package malkist_test
 import (
 	"github.com/pamungkaski/malkist-go"
 	"testing"
+	"github.com/pamungkaski/malkist-go/mock"
 )
 
 func TestCalculateDistance(t *testing.T) {
-	var mocks = malkist.DistanceMatrixMocks
+	var mocks = mock.DistanceMatrixMocks
 	m := malkist.Malkist{}
-	for _, mock := range mocks {
-		result, err := m.CalculateDistance(mock.Origins, mock.Destinations)
+	for _, malmock := range mocks {
+		result, err := m.CalculateDistance(malmock.Origins, malmock.Destinations)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 			return
 		}
 
-		expected := mock.Expected
+		expected := malmock.Expected
 		if len(expected) != len(result) {
-			t.Error(err)
+			t.Fatal(err)
 			return
 		}
 		for key, res := range result {

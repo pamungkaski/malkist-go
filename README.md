@@ -1,5 +1,7 @@
 # Malkist
 
+[![Build Status](https://travis-ci.com/pamungkaski/malkist-go.svg?branch=master)](https://travis-ci.com/pamungkaski/malkist-go)
+
 Simple Google Maps Web Service API Wrapper on Go [Google Maps Web Service API](https://developers.google.com/maps/documentation/)
 
 ## Installation
@@ -11,15 +13,10 @@ Simple Google Maps Web Service API Wrapper on Go [Google Maps Web Service API](h
 * [x] Distance Matrix API [link](https://developers.google.com/maps/documentation/distance-matrix/intro)
 
 ## Usage
+You need Google API key
 
 ### Distance Matrix API
 
-
-### Testing
-
-Run:
-
-    $ go test -v
 
 ## Development
 
@@ -27,8 +24,13 @@ After checking out the repo, run
 
     $ dep ensure
 
-
 To install the dependecies of this library
+
+### Testing
+
+Run:
+
+    $ go test -v
 
 ## Contributing
 

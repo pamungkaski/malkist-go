@@ -1,15 +1,17 @@
-package malkist
+package mock
+
+import "github.com/pamungkaski/malkist-go"
 
 type distanceMatrixMock struct {
 	Origins      []string
 	Destinations []string
-	Expected     []DistanceMatrix
+	Expected     []malkist.DistanceMatrix
 }
 
 // DistanceMatrixMocks contain the scenario for testing CalculateDistance function.
 var DistanceMatrixMocks = []distanceMatrixMock{
 	{
-		Expected: []DistanceMatrix{
+		Expected: []malkist.DistanceMatrix{
 			{
 				Origin:      "566 Vermont St, Brooklyn, NY 11207, USA",
 				Destination: "67-89 Pacific St, Brooklyn, NY 11201, USA",

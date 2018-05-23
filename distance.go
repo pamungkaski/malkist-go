@@ -48,34 +48,59 @@ type distanceMatrixAPIDuration struct {
 	Value float64 `json:"value"`
 }
 
+// createDistanceMatrixURL to construct the API endpoint with its params.
+func createDistanceMatrixURL(origins, destinations []string, key string) (*url.URL, error) {
+	endpoint, err := url.Parse(fmt.Sprint("https://maps.googleapis.com/maps/api/distancematrix/json"))
+	if err != nil {
+		return &url.URL{}, err
+	}
+	endpoint.Scheme = "https"
+	endpoint.Host = "google.com"
+
+	query := endpoint.Query()
+
+	for _, origin := range origins {
+		query.Add("origins", origin)
+	}
+
+	for _, destination := range destinations {
+		query.Add("destinations", destination)
+	}
+
+	if key != "" {
+		query.Add("key", key)
+	}
+
+	endpoint.RawQuery = query.Encode()
+
+	return endpoint, nil
+}
+
+// distanceWrapper will wrap raw response into DistanceMatrix struct.
+func distanceWrapper(response distanceMatrixAPIResponse) ([]DistanceMatrix) {
+	var result []DistanceMatrix
+	for originKey, row := range response.Rows {
+		for destKey, element := range row.Elements {
+			var matrix DistanceMatrix
+			matrix.Origin = response.OriginAddresses[originKey]
+			matrix.Destination = response.DestinationAddresses[destKey]
+			matrix.Distance = element.Distance.Value
+			matrix.Duration = element.Duration.Value
+			result = append(result, matrix)
+		}
+	}
+	return result
+}
+
 // CalculateDistance will hit Google API and the Wrap it into DistanceMatrix Array.
 // The size of the array is the size of cross product OriginsXDestinations.
 func (m Malkist) CalculateDistance(origins, destinations []string) ([]DistanceMatrix, error) {
-	var result []DistanceMatrix
-
-	query := fmt.Sprint("https://maps.googleapis.com/maps/api/distancematrix/json?origins=")
-	for key, origin := range origins {
-		query += url.QueryEscape(fmt.Sprintf("%v", origin))
-		if key != len(origins)-1 {
-			query += "%7C"
-		}
+	endpoint, err := createDistanceMatrixURL(origins, destinations, m.Key)
+	if err != nil {
+		return nil, fmt.Errorf("URL error: %v", err.Error())
 	}
 
-	query += fmt.Sprint("&destinations=")
-
-	for key, destination := range destinations {
-		query += url.QueryEscape(fmt.Sprintf("%v", destination))
-		if key != len(destinations)-1 {
-			query += "%7C"
-		}
-	}
-
-	if m.Key != "" {
-		query += fmt.Sprintf("&key=%v", m.Key)
-	}
-
-	//fmt.Println(query)
-	res, err := http.Get(query)
+	res, err := http.Get(endpoint.String())
 	if err != nil {
 		return nil, fmt.Errorf("distance calculation error: %v", err.Error())
 	}
@@ -83,20 +108,11 @@ func (m Malkist) CalculateDistance(origins, destinations []string) ([]DistanceMa
 	var body distanceMatrixAPIResponse
 	json.NewDecoder(res.Body).Decode(&body)
 
+	defer res.Body.Close()
+
 	if body.Status != "OK" {
 		return nil, fmt.Errorf("distance calculation error: %v", body.Status)
 	}
 
-	for originKey, row := range body.Rows {
-		for destKey, element := range row.Elements {
-			var matrix DistanceMatrix
-			matrix.Origin = body.OriginAddresses[originKey]
-			matrix.Destination = body.DestinationAddresses[destKey]
-			matrix.Distance = element.Distance.Value
-			matrix.Duration = element.Duration.Value
-			result = append(result, matrix)
-		}
-	}
-
-	return result, nil
+	return distanceWrapper(body), nil
 }
