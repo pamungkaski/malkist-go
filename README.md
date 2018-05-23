@@ -11,12 +11,103 @@ Simple Google Maps Web Service API Wrapper on Go [Google Maps Web Service API](h
 ## Functionality
 
 * [x] Distance Matrix API [link](https://developers.google.com/maps/documentation/distance-matrix/intro)
+* [ ] Elevation API [link](https://developers.google.com/maps/documentation/elevation/intro)
+* [ ] Geolocation API [link](https://developers.google.com/maps/documentation/geolocation/intro)
+* [ ] Time Zone API [link](https://developers.google.com/maps/documentation/timezone/intro)
+* [ ] Directions API [link](https://developers.google.com/maps/documentation/directions/intro)
+* [ ] Roads API [link](https://developers.google.com/maps/documentation/roads/intro)
+* [ ] Geocoding [link](https://developers.google.com/maps/documentation/geocoding/intro)
+* [ ] Place API for Web [link](https://developers.google.com/maps/documentation/web-service/intro)
 
 ## Usage
-You need Google API key
+You'll need Google API key to use malkist, so checkout [get api key](https://developers.google.com/places/web-service/get-api-key)
 
+### Initialize
+
+```go
+package main
+
+import (
+	"github.com/pamungkaski/malkist-go"
+	"fmt"
+)
+
+func main() {
+	m := malkist.Malkist{
+		Key: "YOUR API KEY",
+	}
+	// to changeAPI key
+	m.ChangeAPIKey("YOUR API KEY")
+}
+
+```
 ### Distance Matrix API
+**Main Function :**
 
+````
+// distance.go
+func (m Malkist) CalculateDistance(origins, destinations []string) ([]DistanceMatrix, error)
+````
+   
+**Return Struct :**
+```go
+// distance.go
+package malkist
+
+// DistanceMatrix represent the value that returned from CalculateDistance.
+type DistanceMatrix struct {
+	Origin      string  `json:"origin"`
+	Destination string  `json:"destination"`
+	Distance    float64 `json:"distance"`
+	Duration    float64 `json:"duration"`
+}
+```
+`CalculateDistance` will return array of DistanceMatrix even when it is only between two coordinate. 
+
+**Calculate distance between two coordinate :**
+```go
+package main
+
+import (
+	"github.com/pamungkaski/malkist-go"
+	"fmt"
+)
+
+func main() {
+	m := malkist.Malkist{}
+
+	distance, err := m.CalculateDistance([]string{"40.6655101, -73.89188969999998"}, []string{"40.6905615, -73.9976592",})
+	if err != nil {
+		fmt.Errorf(err.Error())
+	}
+
+	fmt.Println(distance)
+}
+```
+
+**Calculate distance between multiple coordinate :**
+```go
+package main
+
+import (
+	"github.com/pamungkaski/malkist-go"
+	"fmt"
+)
+
+func main() {
+	m := malkist.Malkist{}
+
+	distance, err := m.CalculateDistance(
+		[]string{"40.6655101, -73.89188969999998", "40.6905615, -73.9976592",},
+		[]string{"40.6905615, -73.9976592", "40.6655101, -73.89188969999998",},
+		)
+	if err != nil {
+		fmt.Errorf(err.Error())
+	}
+
+	fmt.Println(distance)
+}
+```
 
 ## Development
 
@@ -24,7 +115,7 @@ After checking out the repo, run
 
     $ dep ensure
 
-To install the dependecies of this library
+To install the dependencies of this library
 
 ### Testing
 
